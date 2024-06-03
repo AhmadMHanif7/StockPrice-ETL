@@ -1,0 +1,29 @@
+name: Update Stock Price
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 13 * * *'  # This will run the job every day at 1 PM UTC (7 AM CST)
+
+jobs:
+  update-stock-price:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.6'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run update_stock_price script
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: python update_stock_price.py
